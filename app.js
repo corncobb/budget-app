@@ -1,22 +1,22 @@
 
 // Budget Controller
-var budgetController = (() => {
+let budgetController = (() => {
 
     // Does not like arrow functions because the 'this' needs to have its own scope. NOT the window object
-    var Expense = function (id, description, value) {
+    let Expense = function (id, description, value) {
         this.id = id;
         this.description = description
         this.value = value;
     };
 
-    var Income = function (id, description, value) {
+    let Income = function (id, description, value) {
         this.id = id;
         this.description = description
         this.value = value;
     };
 
-    var calculateTotal = (type) => {
-        var sum = 0;
+    let calculateTotal = (type) => {
+        let sum = 0;
 
         data.allItems[type].forEach((cur) => {
             sum += cur.value;
@@ -26,7 +26,7 @@ var budgetController = (() => {
         
     };
 
-    var data = {
+    let data = {
         allItems: {
             exp: [],
             inc: []
@@ -41,7 +41,7 @@ var budgetController = (() => {
 
     return {
         addItem: (type, des, val) => {
-            var newItem, ID;
+            let newItem, ID;
 
             // Create new ID
             if (data.allItems[type].length > 0) {
@@ -65,7 +65,7 @@ var budgetController = (() => {
         },
 
         deleteItem: (type, id) => {
-            var ids = data.allItems[type].map((cur) => {
+            let ids = data.allItems[type].map((cur) => {
                 return cur.id
             });
 
@@ -106,9 +106,9 @@ var budgetController = (() => {
 
 
 // UI Controller
-var UIController = (() => {
+let UIController = (() => {
 
-    var DOMstrings = {
+    let DOMstrings = {
         inputType: '.add__type',
         inputDescription: '.add__description',
         inputValue: '.add__value',
@@ -133,7 +133,7 @@ var UIController = (() => {
         },
 
         addListItem: (obj, type) => {
-            var html, newHtml, element;
+            let html, newHtml, element;
             // Create HTML string with placeholder text
 
             if (type === 'inc') {
@@ -155,7 +155,7 @@ var UIController = (() => {
         },
 
         clearFields: () => {
-            var fields, fieldsArr;
+            let fields, fieldsArr;
 
             fields = document.querySelectorAll(DOMstrings.inputDescription + ', ' + DOMstrings.inputValue);
 
@@ -189,10 +189,10 @@ var UIController = (() => {
 
 
 // Global App Controller
-var controller = ((budgetCtrl, UICtrl) => {
+let controller = ((budgetCtrl, UICtrl) => {
 
-    var setupEventListeners = () => {
-        var DOM = UICtrl.getDOMstrings();
+    let setupEventListeners = () => {
+        let DOM = UICtrl.getDOMstrings();
 
         document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
 
@@ -207,12 +207,12 @@ var controller = ((budgetCtrl, UICtrl) => {
 
     }
 
-    var updateBudget = () => {
+    let updateBudget = () => {
         // 1. Calculate the budget
         budgetCtrl.calculateBudget();
 
         // 2. Return the budget
-        var budget = budgetCtrl.getBudget();
+        let budget = budgetCtrl.getBudget();
 
 
         // 3. Display the budget on the UI
@@ -220,9 +220,9 @@ var controller = ((budgetCtrl, UICtrl) => {
 
     };
 
-    var ctrlAddItem = () => {
+    let ctrlAddItem = () => {
 
-        var input, newItem;
+        let input, newItem;
 
         // 1. Get the filled input data
         input = UIController.getinput();
@@ -241,8 +241,8 @@ var controller = ((budgetCtrl, UICtrl) => {
         }
     };
 
-    var ctrlDeleteItem = (event) => {
-        var itemID;
+    let ctrlDeleteItem = (event) => {
+        let itemID;
 
         itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
 
