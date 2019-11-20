@@ -1,21 +1,21 @@
 
 // Budget Controller
-let budgetController = (() => {
+const budgetController = (() => {
 
     // Does not like arrow functions because the 'this' needs to have its own scope. NOT the window object
-    let Expense = function (id, description, value) {
+    const Expense = function (id, description, value) {
         this.id = id;
         this.description = description
         this.value = value;
     };
 
-    let Income = function (id, description, value) {
+    const Income = function (id, description, value) {
         this.id = id;
         this.description = description
         this.value = value;
     };
 
-    let calculateTotal = (type) => {
+    const calculateTotal = (type) => {
         let sum = 0;
 
         data.allItems[type].forEach((cur) => {
@@ -26,7 +26,7 @@ let budgetController = (() => {
         
     };
 
-    let data = {
+    const data = {
         allItems: {
             exp: [],
             inc: []
@@ -106,9 +106,9 @@ let budgetController = (() => {
 
 
 // UI Controller
-let UIController = (() => {
+const UIController = (() => {
 
-    let DOMstrings = {
+    const DOMstrings = {
         inputType: '.add__type',
         inputDescription: '.add__description',
         inputValue: '.add__value',
@@ -189,10 +189,10 @@ let UIController = (() => {
 
 
 // Global App Controller
-let controller = ((budgetCtrl, UICtrl) => {
+const controller = ((budgetCtrl, UICtrl) => {
 
-    let setupEventListeners = () => {
-        let DOM = UICtrl.getDOMstrings();
+    const setupEventListeners = () => {
+        const DOM = UICtrl.getDOMstrings();
 
         document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
 
@@ -207,12 +207,12 @@ let controller = ((budgetCtrl, UICtrl) => {
 
     }
 
-    let updateBudget = () => {
+    const updateBudget = () => {
         // 1. Calculate the budget
         budgetCtrl.calculateBudget();
 
         // 2. Return the budget
-        let budget = budgetCtrl.getBudget();
+        const budget = budgetCtrl.getBudget();
 
 
         // 3. Display the budget on the UI
@@ -220,7 +220,7 @@ let controller = ((budgetCtrl, UICtrl) => {
 
     };
 
-    let ctrlAddItem = () => {
+    const ctrlAddItem = () => {
 
         let input, newItem;
 
@@ -241,7 +241,7 @@ let controller = ((budgetCtrl, UICtrl) => {
         }
     };
 
-    let ctrlDeleteItem = (event) => {
+    const ctrlDeleteItem = (event) => {
         let itemID;
 
         itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
