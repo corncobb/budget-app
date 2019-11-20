@@ -7,6 +7,19 @@ let budgetController = (() => {
         this.id = id;
         this.description = description
         this.value = value;
+        this.percentage = -1;
+    };
+
+    Expense.prototype.calcPercentage = (totalIncome) => {
+        if (totalIncome > 0) {
+            this.percentage = Math.round((this.value / totalIncome) * 100);
+        } else {
+            this.percentage = -1;
+        }
+    };
+
+    Expense.prototype.getPercentage = () => {
+        return this.percentage;
     };
 
     let Income = function (id, description, value) {
@@ -69,7 +82,7 @@ let budgetController = (() => {
                 return cur.id
             });
 
-            index = ids.indexOf(id); // This line could have been moved into the splice method below but I am just following along in the video
+            index = ids.indexOf(id); 
 
             if (index !== -1) {
                 data.allItems[type].splice(index, 1);
@@ -90,8 +103,22 @@ let budgetController = (() => {
             } else {
                 data.percentage = -1;
             }
+        },
+
+        calculatePercentages: () => {
+            data.allItems.exp.forEach((cur) => {
+                cur.calcPercentage(data.totals.inc);
+            })
 
         },
+
+        getPercentages: () => {
+            let allPerc = data.allItems.exp.map((cur) => {
+                return cur.getPercentage();
+            });
+            return allPerc;
+        },
+
         getBudget: () => {
             return {
                 budget: data.budget,
@@ -152,6 +179,11 @@ let UIController = (() => {
             // Insert the HTML text
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
 
+        },
+
+        deleteListItem: (selectorID) => {
+            let el = document.getElementById(selectorID);
+            el.parentNode.removeChild(el);
         },
 
         clearFields: () => {
@@ -220,6 +252,17 @@ let controller = ((budgetCtrl, UICtrl) => {
 
     };
 
+    const updatePercentages = () => {
+
+        // 1. Calculate percentages 
+        budgetCtrl.calculatePercentages();
+
+        // 2. Read percentages from the budget controller
+        let percentages = budgetCtrl.getPercentages();
+
+        // 3. Update the UI with the new percentages
+    };
+
     let ctrlAddItem = () => {
 
         let input, newItem;
@@ -238,6 +281,9 @@ let controller = ((budgetCtrl, UICtrl) => {
     
             // 4. Calculate and update budget
             updateBudget();
+
+            // 5. Calculate and update percentages
+            updatePercentages();
         }
     };
 
@@ -247,7 +293,7 @@ let controller = ((budgetCtrl, UICtrl) => {
         itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
 
         if (itemID) {
-            // inc-1
+            
             splitID = itemID.split('-');
             type = splitID[0];
             ID = parseInt(splitID[1]);
@@ -256,8 +302,13 @@ let controller = ((budgetCtrl, UICtrl) => {
             budgetCtrl.deleteItem(type, ID);
 
             // 2. Delete the item from the UI
+            UICtrl.deleteListItem(itemID);
 
             // 3. Update and show the new budget
+            updateBudget();
+
+            // 4. Calculate and update percentages
+            PaymentRequestUpdateEvent();
 
         }
     }
